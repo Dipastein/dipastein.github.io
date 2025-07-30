@@ -1,22 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Redirecting...</title>
   <script>
-    async function redirect() {
-      const path = window.location.pathname.slice(1); // hapus '/' paling depan
-      if (!path || path === "index.html") return; // biarkan halaman utama
+    async function loadLinksScript() {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://mbitly.blogspot.com/p/urls.html';
+        script.onload = () => resolve(window.links);
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
 
-      const res = await fetch("/links.json");
-      const links = await res.json();
-      const target = links[path];
-      if (target) {
-        window.location.href = target;
-      } else {
-        document.body.innerHTML = `<h1>404: Link "${path}" tidak ditemukan</h1>`;
+    async function redirect() {
+      const path = window.location.pathname.slice(1); // e.g. 'youtube'
+      if (!path || path === "index.html" || path === "404.html") return;
+
+      try {
+        const links = await loadLinksScript();
+        const target = links[path];
+        if (target) {
+          window.location.replace(target);
+        } else {
+          document.body.innerHTML = `<h1>404: Shortlink "${path}" tidak ditemukan</h1>`;
+        }
+      } catch (e) {
+        document.body.innerHTML = `<h1>Gagal memuat links dari Blogspot</h1>`;
       }
     }
+
     redirect();
   </script>
 </head>
