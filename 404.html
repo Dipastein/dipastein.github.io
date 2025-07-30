@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    async function redirect() {
+      const path = window.location.pathname.slice(1); // e.g. 'youtube'
+      if (!path || path === "index.html" || path === "404.html") return;
+
+      try {
+        const res = await fetch("/links.json");
+        const links = await res.json();
+        const target = links[path];
+        if (target) {
+          window.location.replace(target);
+        } else {
+          document.body.innerHTML = `<h1>404: Shortlink "${path}" tidak ditemukan</h1>`;
+        }
+      } catch (e) {
+        document.body.innerHTML = `<h1>Gagal memuat daftar link</h1>`;
+      }
+    }
+    redirect();
+  </script>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
+</html>
