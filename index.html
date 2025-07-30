@@ -1,32 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Redirecting...</title>
   <script>
-//<![CDATA[
-(async function() {
-  try {
-    const response = await fetch("https://mbitly.blogspot.com/p/urls.html");
-    const html = await response.text();
+    async function redirect() {
+      const path = window.location.pathname.slice(1); // hapus '/' paling depan
+      if (!path || path === "index.html") return; // biarkan halaman utama
 
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-    const jsonText = doc.querySelector("#urlData").textContent;
-    const urls = JSON.parse(jsonText);
-
-    const key = window.location.pathname.slice(1); // hapus leading '/'
-    if (urls[key]) {
-      window.location.replace(urls[key]);
-    } else {
-      document.body.innerHTML = `<h2>Shortlink '${key}' tidak ditemukan.</h2>`;
+      const res = await fetch("/links.json");
+      const links = await res.json();
+      const target = links[path];
+      if (target) {
+        window.location.href = target;
+      } else {
+        document.body.innerHTML = `<h1>404: Link "${path}" tidak ditemukan</h1>`;
+      }
     }
-  } catch (e) {
-    console.error(e);
-    document.body.innerHTML = "Gagal memuat data shortlink.";
-  }
-})();
-//]]>
+    redirect();
   </script>
 </head>
 <body>
