@@ -1,33 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Redirection Script</title>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+//<![CDATA[
+(async function() {
+  try {
+    const response = await fetch("https://mbitly.blogspot.com/p/urls.html");
+    const html = await response.text();
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    const jsonText = doc.querySelector("#urlData").textContent;
+    const urls = JSON.parse(jsonText);
+
+    const key = window.location.pathname.slice(1); // hapus leading '/'
+    if (urls[key]) {
+      window.location.replace(urls[key]);
+    } else {
+      document.body.innerHTML = `<h2>Shortlink '${key}' tidak ditemukan.</h2>`;
+    }
+  } catch (e) {
+    console.error(e);
+    document.body.innerHTML = "Gagal memuat data shortlink.";
+  }
+})();
+//]]>
+  </script>
 </head>
 <body>
-
-<script>
-// @package SYSA.JS
-// @author shoaiyb sysa
-// @license SYSA License
-
-//<![CDATA[
-var key = window.location.href.split("go/")[1]?.replace("/", "");
-var urls = {
-    'fb': 'https://www.facebook.com/realshoaiyb',
-    'ig': 'https://www.instagram.com/sysa_shoaiyb',
-    'twitter': 'https://twitter.com/shoaiybsysa'
-};
-
-if (key) {
-    if (urls[key]) {
-        window.location.href = urls[key];
-    } else {
-        document.write("'" + key + "' not found :(");
-    }
-}
-//]]>
-</script>
-
+  <p>Redirecting...</p>
 </body>
 </html>
