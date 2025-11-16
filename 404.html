@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Redirecting…</title>
-  <script>
-    const links = {
-      "yt": "https://youtube.com",
-      "gh": "https://github.com",
-      "ai": "https://chat.openai.com",
-    };
+<meta charset="UTF-8">
+<title>Redirecting…</title>
+<script>
+const links = {
+  "yt": "https://youtube.com",
+  "gh": "https://github.com",
+  "ai": "https://chat.openai.com",
+};
 
-    const code = location.hash.replace("#", "");
-    if (links[code]) {
-      location.replace(links[code]);
-    } else {
-      document.write("Short link not found");
-    }
-  </script>
+let path = location.pathname.split("/").pop();
+
+if (links[path]) {
+  location.replace(links[path]);
+} else {
+  document.write("Short link not found");
+}
+</script>
 </head>
-<body>
-</body>
 </html>
